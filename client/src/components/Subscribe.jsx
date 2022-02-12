@@ -14,6 +14,7 @@ import { makeStyles } from '@material-ui/styles';
 const useStyles = makeStyles({
 	subscribe: {
 		margin: '1vh 0 0 0',
+		width: '100%',
 	},
 });
 
@@ -41,7 +42,7 @@ const Subscribe = ({ channelName, channelId, description, imgUrl, subCount }) =>
 							href={`https://www.youtube.com/channel/${channelId}?sub_confirmation=1`}
 							target="_blank"
 							variant="contained"
-							color="disabled"
+							color="default"
 							disableElevation
 						>
 							Confirm
