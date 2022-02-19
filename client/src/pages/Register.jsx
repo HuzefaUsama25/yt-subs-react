@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Grid, Button, Paper, TextField, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
 
@@ -7,18 +7,20 @@ import { useState } from 'react';
 const useStyles = makeStyles({
 	loginPaper: {
 		margin: '40px auto',
-		height: '50vh',
+		height: 'fit-content',
 		padding: '20px',
 	},
 	page: {
 		margin: '0px auto',
 	},
 	field: {
-		margin: '10px 0',
+		margin: '10px 0px',
 	},
 });
 
 const Login = () => {
+	const [name, setName] = useState('');
+	const [channel, setChannel] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState([]);
@@ -28,15 +30,20 @@ const Login = () => {
 		e.preventDefault();
 
 		const data = {
+			name: name,
 			email: email,
+			channel: channel,
 			password: password,
 		};
 
+		setName('');
 		setEmail('');
+		setPassword('');
+		setChannel('');
 		setPassword('');
 		setErrors('');
 
-		const response = await fetch('http://localhost:5000/api/auth', {
+		const response = await fetch('http://localhost:5000/api/users', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,26 +66,43 @@ const Login = () => {
 			<Paper className={classes.loginPaper} elevation={10}>
 				<Grid container direction="column" alignItems="center" justifyContent="center">
 					<Typography variant="h4" gutterBottom>
-						Login
+						Register
 					</Typography>
 
 					<form noValidate autoComplete="off">
 						{errors ? (
 							errors.map((error, index) => {
 								return (
-									<Alert
-										severity="error"
-										variant="filled"
-										fullwidth="true"
-										key={index}
-									>
-										{error.msg}
-									</Alert>
+									<>
+										<Alert
+											severity="error"
+											variant="filled"
+											fullwidth="true"
+											className="field"
+											key={index}
+										>
+											{error.msg}
+										</Alert>
+										<div style={{ height: '10px' }}></div>
+									</>
 								);
 							})
 						) : (
 							<></>
 						)}
+
+						<TextField
+							className={classes.field}
+							fullWidth
+							required
+							variant="outlined"
+							label="Name"
+							type="text"
+							value={name}
+							onChange={(e) => {
+								setName(e.target.value);
+							}}
+						/>
 						<TextField
 							className={classes.field}
 							fullWidth
@@ -89,6 +113,18 @@ const Login = () => {
 							value={email}
 							onChange={(e) => {
 								setEmail(e.target.value);
+							}}
+						/>
+						<TextField
+							className={classes.field}
+							fullWidth
+							required
+							variant="outlined"
+							label="Channel ID"
+							type="text"
+							value={channel}
+							onChange={(e) => {
+								setChannel(e.target.value);
 							}}
 						/>
 						<TextField
