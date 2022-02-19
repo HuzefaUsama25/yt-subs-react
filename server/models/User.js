@@ -23,6 +23,12 @@ const UserSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	subscribers: [
+		{
+			channel: { type: String, required: true },
+			subscribed: { type: Boolean, required: true },
+		},
+	],
 });
 
 module.exports = User = mongoose.model('user', UserSchema);

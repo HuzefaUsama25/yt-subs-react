@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../../models/User');
 
 router.get('/', async (req, res) => {
-	const users = await User.find({}, ['name', 'email'], {
+	const users = await User.find({}, ['channel'], {
 		skip: 0,
 		limit: 10,
 		sort: {
