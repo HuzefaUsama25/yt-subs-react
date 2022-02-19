@@ -1,12 +1,20 @@
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, Button, Box, IconButton, Accordion } from '@material-ui/core';
 
 const Navbar = () => {
 	return (
-		<AppBar position="sticky" elevation={0}>
+		<AppBar position="static" elevation={0} className="appbar">
 			<Toolbar variant="regular">
-				<Typography variant="h6" color="inherit" edge={'start'}>
+				<IconButton
+					size="large"
+					edge="start"
+					color="inherit"
+					aria-label="menu"
+					sx={{ mr: 2 }}
+				></IconButton>
+				<Typography variant="h6" color="inherit" component="div" sx={{ flexGrow: 1 }}>
 					Sub4Sub
 				</Typography>
+				<Button color="inherit">Login</Button>
 			</Toolbar>
 		</AppBar>
 	);

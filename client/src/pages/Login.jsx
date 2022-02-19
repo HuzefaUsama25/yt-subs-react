@@ -7,7 +7,7 @@ import { useState } from 'react';
 const useStyles = makeStyles({
 	loginPaper: {
 		margin: '40px auto',
-		height: '50vh',
+		height: 'fit-content',
 		padding: '20px',
 	},
 	page: {
@@ -114,6 +114,16 @@ const Login = () => {
 							Submit
 						</Button>
 					</form>
+					<Typography color="textSecondary">OR</Typography>
+					<Button
+						className={classes.field}
+						fullWidth
+						variant="outlined"
+						color="primary"
+						href="/register"
+					>
+						Create New Account
+					</Button>
 				</Grid>
 			</Paper>
 		</Grid>

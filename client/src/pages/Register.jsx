@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 		margin: '0px auto',
 	},
 	field: {
-		margin: '10px 0px',
+		margin: '10px 0',
 	},
 });
 
@@ -150,6 +150,16 @@ const Login = () => {
 							Submit
 						</Button>
 					</form>
+					<Typography color="textSecondary">OR</Typography>
+					<Button
+						className={classes.field}
+						fullWidth
+						variant="outlined"
+						color="primary"
+						href="/login"
+					>
+						Login
+					</Button>
 				</Grid>
 			</Paper>
 		</Grid>
