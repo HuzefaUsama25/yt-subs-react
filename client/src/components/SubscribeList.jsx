@@ -51,17 +51,10 @@ const SubscribeList = (props) => {
 	// useEffect to get new channels
 	useEffect(() => {
 		const fetchData = async () => {
-			if (!token) {
-				navigate('/login');
-			}
-			const response = await fetch('http://localhost:5000/api/auth', {
-				method: 'GET',
-				headers: {
-					'x-auth-token': token,
-				},
-			});
+			const response = await fetch('http://localhost:5000/api/users/new=5');
 			const data = await response.json();
-			setnewchannels(data.subscribers.map((e) => e.channel));
+			console.log(data);
+			setnewchannels(data.map((e) => e.channel));
 		};
 		fetchData();
 		return () => {
@@ -72,21 +65,26 @@ const SubscribeList = (props) => {
 	return (
 		<>
 			<Typography variant="h4" className={classes.heading}>
-				People who subscribe to you
-			</Typography>
-
-			{subchannels.map((channelid) => (
-				<Subscribe channel={channelid} />
-			))}
-
-			<Typography variant="h4" className={classes.heading}>
 				New people to subscribe to
 			</Typography>
 
 			{newchannels.map((channelid) => (
 				<Subscribe channel={channelid} />
 			))}
-			{}
+
+			{subchannels.length ? (
+				<>
+					<Typography variant="h4" className={classes.heading}>
+						People who subscribe to you
+					</Typography>
+
+					{subchannels.map((channelid) => (
+						<Subscribe channel={channelid} />
+					))}
+				</>
+			) : (
+				<></>
+			)}
 		</>
 	);
 };

@@ -13,6 +13,16 @@ router.get('/', async (req, res) => {
 });
 
 // get latest 10 users
+router.get('/new=:number', async (req, res) => {
+	const users = await User.find({}, ['channel'], {
+		skip: 0,
+		limit: req.params.number,
+		sort: {
+			date: 'descending',
+		},
+	});
+	res.json(users);
+});
 
 // post new user
 router.post(
