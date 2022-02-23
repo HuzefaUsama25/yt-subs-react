@@ -12,6 +12,8 @@ router.get('/', async (req, res) => {
 	res.status(200).json(users);
 });
 
+// get latest 10 users
+
 // post new user
 router.post(
 	'/',
