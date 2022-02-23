@@ -1,6 +1,7 @@
 import { Grid, Button, Paper, TextField, Typography, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
+import { Link } from 'react-router-dom';
 
 import { useState } from 'react';
 
@@ -156,7 +157,8 @@ const Login = () => {
 						fullWidth
 						variant="outlined"
 						color="primary"
-						href="/login"
+						component={Link}
+						to="/login"
 					>
 						Login
 					</Button>

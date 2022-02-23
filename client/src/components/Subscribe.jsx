@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/styles';
+import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles({
 	subscribe: {
@@ -17,19 +18,57 @@ const useStyles = makeStyles({
 	},
 });
 
-const Subscribe = ({ channelName, channelId, description, imgUrl, subCount }) => {
+const Subscribe = (props) => {
+	const [apiKey, setapiKey] = useState('AIzaSyCGnHPKqunoQFw3pwCp19gYTBkBoGnXNsE');
+	const [channelname, setchannelname] = useState('');
+	const [channelid, setchannelid] = useState(props.channel);
+	const [description, setdescription] = useState('');
+	const [imgurl, setimgurl] = useState('');
+	const [subcount, setsubcount] = useState('');
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				let data = await fetch(
+					`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id=${channelid}&key=${apiKey}`
+				);
+				let json_data = await data.json();
+
+				console.log(json_data);
+
+				setchannelname(json_data.items[0].snippet.title);
+				setchannelid(json_data.items[0].id);
+				setdescription(json_data.items[0].snippet.description);
+				setimgurl(json_data.items[0].snippet.thumbnails.default.url);
+				setsubcount(json_data.items[0].statistics.subscriberCount);
+			} catch (err) {
+				setchannelname('No Name');
+				setchannelid('No id');
+				setdescription('No Description');
+				setimgurl('No image');
+				setsubcount(0);
+				console.log(err);
+			}
+		};
+		fetchData();
+
+		return () => {
+			console.log('useEffect cleanup');
+		};
+	}, []);
+
 	const classes = useStyles();
 
 	return (
 		<Card variant="outlined" className={classes.subscribe}>
 			<CardHeader
-				avatar={<Avatar src={imgUrl} alt={channelName}></Avatar>}
-				title={channelName ? channelName : 'No Name'}
-				subheader={`Subs: ${subCount}`}
+				avatar={<Avatar src={imgurl} alt={channelname}></Avatar>}
+				title={channelname ? channelname : 'No Name'}
+				subheader={`Subs: ${subcount}`}
 				action={
 					<ButtonGroup>
 						<Button
-							href={`https://www.youtube.com/channel/${channelId}?sub_confirmation=1`}
+							href={`https://www.youtube.com/channel/${channelid}?sub_confirmation=1`}
 							target="_blank"
 							variant="contained"
 							color="secondary"
@@ -38,7 +77,7 @@ const Subscribe = ({ channelName, channelId, description, imgUrl, subCount }) =>
 							Subscribe
 						</Button>
 						<Button
-							href={`https://www.youtube.com/channel/${channelId}?sub_confirmation=1`}
+							href={`https://www.youtube.com/channel/${channelid}?sub_confirmation=1`}
 							target="_blank"
 							variant="contained"
 							color="default"

@@ -1,7 +1,16 @@
 import Subscribe from './Subscribe';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 
-const SubscribeList = () => {
+const useStyles = makeStyles({
+	heading: {
+		margin: '1em 0',
+	},
+});
+
+const SubscribeList = (props) => {
 	/*
 		'UCX6OQ3DkcsbYNE6H8uQQuVA',
 		'UCAiLfjNXkNv24uhpzUgPa6A',
@@ -11,64 +20,73 @@ const SubscribeList = () => {
 		'UCZzvDDvaYti8Dd8bLEiSoyQ',
 		'UCW5YeuERMmlnqo4oq8vwUpg',
 	*/
-	const [channelIds, setchannelIds] = useState([]);
+	const [subchannels, setsubchannels] = useState([]);
+	const [newchannels, setnewchannels] = useState([]);
+	const [token, settoken] = useState(props.token);
 
-	const [apiKey, setapiKey] = useState('AIzaSyCGnHPKqunoQFw3pwCp19gYTBkBoGnXNsE');
-	const [channelData, setchannelData] = useState([]);
+	const navigate = useNavigate();
+	const classes = useStyles();
 
+	// useEffect to get current users' subscribers' channels
 	useEffect(() => {
 		const fetchData = async () => {
-			const response = await fetch('http://localhost:5000/api/channels');
+			if (!token) {
+				navigate('/login');
+			}
+			const response = await fetch('http://localhost:5000/api/auth', {
+				method: 'GET',
+				headers: {
+					'x-auth-token': token,
+				},
+			});
 			const data = await response.json();
-
-			console.log('HII');
-			console.log(data);
-
-			setchannelIds(data.map((e) => e.channel));
-			console.log(channelIds);
+			setsubchannels(data.subscribers.map((e) => e.channel));
 		};
-
 		fetchData();
-
 		return () => {
 			console.log('useEffect cleanup');
 		};
 	}, []);
 
+	// useEffect to get new channels
 	useEffect(() => {
 		const fetchData = async () => {
-			for (let i = 0; i < channelIds.length; i++) {
-				try {
-					let data = await fetch(
-						`https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2Cstatistics&id=${channelIds[i]}&key=${apiKey}`
-					);
-					let json_data = await data.json();
-					setchannelData((prevArray) => [...prevArray, json_data]);
-				} catch (err) {
-					setchannelData();
-					console.log(err);
-				}
+			if (!token) {
+				navigate('/login');
 			}
+			const response = await fetch('http://localhost:5000/api/auth', {
+				method: 'GET',
+				headers: {
+					'x-auth-token': token,
+				},
+			});
+			const data = await response.json();
+			setnewchannels(data.subscribers.map((e) => e.channel));
 		};
 		fetchData();
-
 		return () => {
 			console.log('useEffect cleanup');
 		};
-	}, [channelIds]);
+	}, []);
 
 	return (
 		<>
-			{channelData.map((data) => (
-				<Subscribe
-					key={data.items[0].id}
-					channelName={data.items[0].snippet.title}
-					channelId={data.items[0].id}
-					description={data.items[0].snippet.description}
-					imgUrl={data.items[0].snippet.thumbnails.default.url}
-					subCount={data.items[0].statistics.subscriberCount}
-				/>
+			<Typography variant="h4" className={classes.heading}>
+				People who subscribe to you
+			</Typography>
+
+			{subchannels.map((channelid) => (
+				<Subscribe channel={channelid} />
 			))}
+
+			<Typography variant="h4" className={classes.heading}>
+				New people to subscribe to
+			</Typography>
+
+			{newchannels.map((channelid) => (
+				<Subscribe channel={channelid} />
+			))}
+			{}
 		</>
 	);
 };

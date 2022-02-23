@@ -1,6 +1,7 @@
 import { Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Alert from '@material-ui/lab/Alert';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useState } from 'react';
 
@@ -23,6 +24,7 @@ const Login = () => {
 	const [password, setPassword] = useState('');
 	const [errors, setErrors] = useState([]);
 	const [jwt, setJwt] = useState('');
+	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -50,6 +52,7 @@ const Login = () => {
 		} else {
 			setJwt(result.token);
 			console.log(jwt);
+			navigate('/', { state: { token: result.token } });
 		}
 	};
 
@@ -120,7 +123,8 @@ const Login = () => {
 						fullWidth
 						variant="outlined"
 						color="primary"
-						href="/register"
+						component={Link}
+						to="/register"
 					>
 						Create New Account
 					</Button>
