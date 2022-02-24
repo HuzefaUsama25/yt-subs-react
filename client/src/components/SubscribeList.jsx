@@ -69,7 +69,7 @@ const SubscribeList = (props) => {
 			</Typography>
 
 			{newchannels.map((channelid) => (
-				<Subscribe channel={channelid} />
+				<Subscribe channel={channelid} key={channelid} />
 			))}
 
 			{subchannels.length ? (
@@ -79,7 +79,7 @@ const SubscribeList = (props) => {
 					</Typography>
 
 					{subchannels.map((channelid) => (
-						<Subscribe channel={channelid} />
+						<Subscribe channel={channelid} key={channelid} />
 					))}
 				</>
 			) : (

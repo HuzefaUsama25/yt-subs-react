@@ -26,6 +26,17 @@ const Subscribe = (props) => {
 	const [imgurl, setimgurl] = useState('');
 	const [subcount, setsubcount] = useState('');
 
+	const [subscribeClicked, setsubscribeClicked] = useState(false);
+
+	const handleSubscribe = () => {
+		setsubscribeClicked(true);
+		console.log('Subscribe clicked');
+	};
+	const handleConfirm = () => {
+		console.log('Confirm clicked');
+		// add user as a subscriber (of the channel he clicked) to database
+	};
+
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -70,6 +81,7 @@ const Subscribe = (props) => {
 						<Button
 							href={`https://www.youtube.com/channel/${channelid}?sub_confirmation=1`}
 							target="_blank"
+							onClick={handleSubscribe}
 							variant="contained"
 							color="secondary"
 							disableElevation
@@ -77,7 +89,8 @@ const Subscribe = (props) => {
 							Subscribe
 						</Button>
 						<Button
-							href={`https://www.youtube.com/channel/${channelid}?sub_confirmation=1`}
+							disabled={!subscribeClicked}
+							onClick={handleConfirm}
 							target="_blank"
 							variant="contained"
 							color="default"
