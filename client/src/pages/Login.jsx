@@ -52,6 +52,7 @@ const Login = () => {
 		} else {
 			setJwt(result.token);
 			console.log(jwt);
+			console.log(result);
 			navigate('/', { state: { token: result.token } });
 		}
 	};

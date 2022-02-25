@@ -5,10 +5,10 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 
 // get all users
-router.post('/id=:channel2sub', auth, async (req, res) => {
+router.post('/', auth, async (req, res) => {
 	try {
 		const mychannelid = req.body.mychannelid;
-		const channel2sub = req.params.channel2sub;
+		const channel2sub = req.body.channel2sub;
 		const user = await User.findOne({ channel: channel2sub }).exec();
 
 		if (!mychannelid) {

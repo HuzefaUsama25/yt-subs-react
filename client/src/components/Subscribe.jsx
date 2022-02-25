@@ -32,9 +32,23 @@ const Subscribe = (props) => {
 		setsubscribeClicked(true);
 		console.log('Subscribe clicked');
 	};
-	const handleConfirm = () => {
+	const handleConfirm = async () => {
 		console.log('Confirm clicked');
 		// add user as a subscriber (of the channel he clicked) to database
+		const data = {
+			mychannelid: props.mychannelid,
+			channel2sub: channelid,
+		};
+		const response = await fetch('http://localhost:5000/api/subscribe/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'x-auth-token': props.token,
+			},
+			body: JSON.stringify(data),
+		});
+		const result = await response.json();
+		console.log(result);
 	};
 
 	useEffect(() => {
@@ -61,6 +75,9 @@ const Subscribe = (props) => {
 				console.log(err);
 			}
 		};
+
+		console.log(props.mychannelid);
+
 		fetchData();
 
 		return () => {

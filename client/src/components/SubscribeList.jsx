@@ -22,6 +22,7 @@ const SubscribeList = (props) => {
 	*/
 	const [subchannels, setsubchannels] = useState([]);
 	const [newchannels, setnewchannels] = useState([]);
+	const [mychannelid, setmychannelid] = useState('');
 	const [token, settoken] = useState(props.token);
 
 	const navigate = useNavigate();
@@ -40,6 +41,8 @@ const SubscribeList = (props) => {
 				},
 			});
 			const data = await response.json();
+			console.log(mychannelid);
+			setmychannelid(data.channel);
 			setsubchannels(data.subscribers.map((e) => e.channel));
 		};
 		fetchData();
@@ -69,7 +72,12 @@ const SubscribeList = (props) => {
 			</Typography>
 
 			{newchannels.map((channelid) => (
-				<Subscribe channel={channelid} key={channelid} />
+				<Subscribe
+					channel={channelid}
+					key={channelid}
+					mychannelid={mychannelid}
+					token={token}
+				/>
 			))}
 
 			{subchannels.length ? (
@@ -79,7 +87,12 @@ const SubscribeList = (props) => {
 					</Typography>
 
 					{subchannels.map((channelid) => (
-						<Subscribe channel={channelid} key={channelid} />
+						<Subscribe
+							channel={channelid}
+							key={channelid}
+							mychannelid={mychannelid}
+							token={token}
+						/>
 					))}
 				</>
 			) : (
