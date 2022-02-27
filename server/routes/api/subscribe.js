@@ -4,18 +4,23 @@ const auth = require('../../middleware/auth');
 
 const User = require('../../models/User');
 
-// get all users
+// subscribe to a user
 router.post('/', auth, async (req, res) => {
 	try {
 		const mychannelid = req.body.mychannelid;
 		const channel2sub = req.body.channel2sub;
-		const user = await User.findOne({ channel: channel2sub }).exec();
+
+		const personToSubscribe = await User.findOne({ channel: channel2sub }).exec();
 
 		if (!mychannelid) {
 			return res.status(404).json({ error: 'No channel Id specified for logged in user' });
 		}
 
-		if (user.subscribers.map((e) => e.channel).includes(mychannelid)) {
+		if (
+			personToSubscribe.subscribers
+				.map((subscriber) => subscriber.channel)
+				.includes(mychannelid)
+		) {
 			return res.status(400).json({ error: 'already subscribed' });
 		} else {
 			User.updateOne(

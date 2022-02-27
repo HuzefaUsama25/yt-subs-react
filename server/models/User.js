@@ -26,7 +26,11 @@ const UserSchema = new mongoose.Schema({
 	subscribers: [
 		{
 			channel: { type: String, required: true },
-			subscribed: { type: Boolean, required: true },
+		},
+	],
+	subscribedto: [
+		{
+			channel: { type: String, required: true },
 		},
 	],
 });
