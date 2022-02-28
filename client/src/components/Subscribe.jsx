@@ -36,7 +36,7 @@ const Subscribe = (props) => {
 		console.log('Confirm clicked');
 		// add user as a subscriber (of the channel he clicked) to database
 		const data = {
-			mychannelid: props.mychannelid,
+			mychannel: props.mychannelid,
 			channel2sub: channelid,
 		};
 		const response = await fetch('http://localhost:5000/api/subscribe/', {

@@ -11,16 +11,8 @@ const useStyles = makeStyles({
 });
 
 const SubscribeList = (props) => {
-	/*
-		'UCX6OQ3DkcsbYNE6H8uQQuVA',
-		'UCAiLfjNXkNv24uhpzUgPa6A',
-		'UCIPPMRA040LQr5QPyJEbmXA',
-		'UCUaT_39o1x6qWjz7K2pWcgw',
-		'UC4-79UOlP48-QNGgCko5p2g',
-		'UCZzvDDvaYti8Dd8bLEiSoyQ',
-		'UCW5YeuERMmlnqo4oq8vwUpg',
-	*/
-	const [subchannels, setsubchannels] = useState([]);
+	const [myData, setmyData] = useState({});
+	const [channelsToSubscribeBack, setchannelsToSubscribeBack] = useState([]);
 	const [newchannels, setnewchannels] = useState([]);
 	const [mychannelid, setmychannelid] = useState('');
 	const [token, settoken] = useState(props.token);
@@ -28,7 +20,7 @@ const SubscribeList = (props) => {
 	const navigate = useNavigate();
 	const classes = useStyles();
 
-	// useEffect to get current users' subscribers' channels
+	// useEffect to get current users' data
 	useEffect(() => {
 		const fetchData = async () => {
 			if (!token) {
@@ -40,30 +32,44 @@ const SubscribeList = (props) => {
 					'x-auth-token': token,
 				},
 			});
-			const data = await response.json();
-			console.log(mychannelid);
-			setmychannelid(data.channel);
-			setsubchannels(data.subscribers.map((e) => e.channel));
+			const res = await response.json();
+			setmyData(res);
+			setmychannelid(myData.channel);
+
+			const mySubscribers = myData.subscribers.filter((subscriber) => {
+				return myData.subscribedto.includes(subscriber);
+			});
+
+			setchannelsToSubscribeBack(mySubscribers.map((subscriber) => subscriber.channel));
 		};
+
 		fetchData();
 		return () => {
 			console.log('useEffect cleanup');
 		};
-	}, []);
+	}, [mychannelid]);
 
 	// useEffect to get new channels
 	useEffect(() => {
 		const fetchData = async () => {
 			const response = await fetch('http://localhost:5000/api/users/new=5');
-			const data = await response.json();
-			console.log(data);
-			setnewchannels(data.map((e) => e.channel));
+			const newChannels = await response.json();
+			console.log(newChannels);
+			const filtered_data = newChannels.filter((newChannel) => {
+				return (
+					newChannel.channel !== mychannelid &&
+					!channelsToSubscribeBack.includes(newChannel.channel) &&
+					!myData.subscribers.map((i) => i.channel).includes(newChannel.channel)
+				);
+			});
+			console.log(filtered_data);
+			setnewchannels(filtered_data.map((e) => e.channel));
 		};
 		fetchData();
 		return () => {
 			console.log('useEffect cleanup');
 		};
-	}, []);
+	}, [mychannelid, channelsToSubscribeBack]);
 
 	return (
 		<>
@@ -80,13 +86,13 @@ const SubscribeList = (props) => {
 				/>
 			))}
 
-			{subchannels.length ? (
+			{channelsToSubscribeBack.length ? (
 				<>
 					<Typography variant="h4" className={classes.heading}>
 						People who subscribe to you
 					</Typography>
 
-					{subchannels.map((channelid) => (
+					{channelsToSubscribeBack.map((channelid) => (
 						<Subscribe
 							channel={channelid}
 							key={channelid}
